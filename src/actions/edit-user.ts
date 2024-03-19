@@ -1,12 +1,10 @@
 'use server'
 
 import { redirect } from 'next/navigation'
-import { db } from '@/db'
 import paths from '@/paths'
 import { zodUserSchema } from '@/db/schema/user.schema'
 import { EditableUser } from '@/constants'
 import { updateUserQuery } from '@/db/queries/users'
-import { User } from '@prisma/client'
 
 interface EditUserFormState {
 	errors: {
@@ -28,20 +26,6 @@ export async function editUserAction(
 	if (!result.success) {
 		return {
 			errors: result.error.flatten().fieldErrors,
-		}
-	}
-
-	const existingUser: User | null = await db.user.findFirst({
-		where: {
-			AND: [{ user_name: formData.user_name }, { id: { not: id } }],
-		},
-	})
-
-	if (existingUser) {
-		return {
-			errors: {
-				_form: ['Username already exists'],
-			},
 		}
 	}
 

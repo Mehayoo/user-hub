@@ -55,7 +55,8 @@ const handleResponse = async (response: Response): Promise<any> =>
 			const error = (data && data.error) || response.statusText
 			console.error(error)
 
-			return Promise.reject(error)
+			return Promise.reject(new Error(error)) // Ensuring errors are always instances of Error to
+			// maintain consistency in how errors are handled
 		}
 
 		return data

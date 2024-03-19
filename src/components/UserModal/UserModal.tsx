@@ -147,6 +147,7 @@ const UserModal = ({ open, setOpen, userId }: UserModalProps) => {
 			alertActions.success('User added')
 		} catch (error: unknown) {
 			alertActions.error('Failed to add user')
+			throw error
 		}
 	}
 
@@ -159,6 +160,7 @@ const UserModal = ({ open, setOpen, userId }: UserModalProps) => {
 			alertActions.success('User updated')
 		} catch (error: unknown) {
 			alertActions.error('Failed to update user')
+			throw error
 		}
 	}
 

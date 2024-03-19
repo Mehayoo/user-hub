@@ -117,19 +117,17 @@ export const updateUserQuery = async (
 	userId: string,
 	body: Omit<User, 'id' | 'created_at' | 'updated_at'>
 ): Promise<User> => {
-	// const existingUser: User | null = await db.user.findFirst({
-	// 	where: {
-	// 		AND: [{ user_name: body.user_name }, { id: { not: userId } }],
-	// 	},
-	// })
+	const existingUser: User | null = await db.user.findFirst({
+		where: {
+			AND: [{ user_name: body.user_name }, { id: { not: userId } }],
+		},
+	})
 
-	// if (existingUser) {
-	// 	return {
-	// 		errors: {
-	// 			_form: ['Username already exists'],
-	// 		},
-	// 	}
-	// }
+	if (existingUser) {
+		if (existingUser) {
+			throw new Error('User name already exists')
+		}
+	}
 
 	try {
 		return db.user.update({

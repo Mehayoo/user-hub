@@ -309,7 +309,14 @@ const UserEditForm = ({ countriesList, user }: UserEditFormProps) => {
 									>
 										<Input disabled />
 									</Form.Item>
-									<Form.Item label=" " name="phone">
+									<Form.Item
+										help={formState.errors?.phone}
+										label=" "
+										name="phone"
+										validateStatus={
+											formState.errors?.phone && 'error'
+										}
+									>
 										<Input placeholder="Phone number" />
 									</Form.Item>
 								</Space.Compact>

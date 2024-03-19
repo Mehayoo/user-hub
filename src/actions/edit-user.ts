@@ -12,6 +12,7 @@ interface EditUserFormState {
 		first_name?: string[]
 		last_name?: string[]
 		birthday?: string[]
+		phone?: string[]
 		_form?: string[]
 	}
 }

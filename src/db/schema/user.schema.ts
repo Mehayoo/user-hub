@@ -25,7 +25,21 @@ export const zodUserSchema = z.object({
 	city: z.string().nullable(),
 	newsletter_register: z.boolean().optional().default(false),
 	country_id: z.string().nullable(),
-	phone: z.string().nullable(),
+	phone: z
+		.string()
+		.nullable()
+		.refine(
+			(value: string | null) => {
+				if (value && value.trim().length > 0) {
+					return REGEX_VALIDATION.phone.test(value)
+				}
+
+				return true
+			},
+			{
+				message: inputsErrors.phone,
+			}
+		),
 	details: z.string().nullable(),
 	hobbies: z.string().nullable(),
 })

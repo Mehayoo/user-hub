@@ -27,7 +27,7 @@ export default function About() {
 					</li>
 					<li>
 						<strong>Dynamic Data Fetching</strong>: Leverages
-						Next.js&apos;s Server-Side Generation (SSG) with
+						Next.js&apos;s Static-Site Generation (SSG) with
 						on-demand cache revalidation for up-to-date data
 						presentation without sacrificing performance.
 					</li>
@@ -169,7 +169,7 @@ export default function About() {
 						<strong>
 							<em>schema.prisma</em>
 						</strong>{' '}
-						file (this is where the entities are located).
+						file (this is where the entities are defined).
 					</li>
 					<li>
 						Run <code>npx prisma migrate dev</code> and give it a
@@ -248,8 +248,8 @@ export default function About() {
 					This app is my intellectual property,{' '}
 					<strong>
 						<em>Mihaiu Sorin-Ionut</em>
-					</strong>{' '}
-					and serves as a demonstration of my professional skills,
+					</strong>
+					, and serves as a demonstration of my professional skills,
 					adaptability, and commitment to delivering high-quality
 					software solutions. It showcases modern web development
 					practices, emphasizing type safety, user experience, and

@@ -6,7 +6,7 @@ This app showcases a blend of modern web technologies and best practices, emphas
 
 -   **CRUD Operations**: View, create, edit, and delete user records directly from a responsive data table.
 -   **Tech Stack**: Built with Next.js, React, TypeScript, Ant Design (AntD), React Hook Form, Recoil, and Prisma, ensuring a type-safe and robust application.
--   **Dynamic Data Fetching**: Leverages Next.js's Server-Side Generation (SSG) with on-demand cache revalidation for up-to-date data presentation without sacrificing performance.
+-   **Dynamic Data Fetching**: Leverages Next.js's Static-Site Generation (SSG) with on-demand cache revalidation for up-to-date data presentation without sacrificing performance.
 -   **State Management**: Utilizes Recoil for efficient global state management across the app, enabling dynamic updates and consistent state across components.
 -   **Form Handling and Validation**: Integrates React Hook Form with AntD for fluid form experiences and employs Yup and Zod for comprehensive client and server-side validation.
 -   **Server Actions**: Employs Next.js server actions for server-side data processing and validation, ensuring data integrity and security.
@@ -30,13 +30,12 @@ This app is pre-seeded with sample data for immediate exploration. Upon the firs
 6. While in production mode, inspect which routes are dynamically generated and which are statically generated for a comprehensive understanding of the app's rendering behavior.
 
 > [!IMPORTANT]
-
-If any error is received when first trying to run the app with `npm install`, `npm run build`, `npm run start`, then you might need to configure the prisma client.
+> If any error is received when first trying to run the app with `npm install`, `npm run build`, `npm run start`, then you might need to configure the prisma client.
 
 1. Copy **_schema.prisma_** from **_/prisma_** folder aywhere outside the project folder.
 2. Delete **_/prisma_** folder.
 3. Run `npx prisma  init --datasource-provider sqlite` command.
-4. Replace newly generated **_schema.prisma_** file from **_/prisma_** folder with the old **_schema.prisma_** file (this is where the entities are located).
+4. Replace newly generated **_schema.prisma_** file from **_/prisma_** folder with the old **_schema.prisma_** file (this is where the entities are defined).
 5. Run `npx prisma migrate dev` and give it a name.
 6. Run `npm run dev` for development mode or `npm run build` and `npm run start` for production mode.
 
@@ -56,7 +55,7 @@ If any error is received when first trying to run the app with `npm install`, `n
 -   **Adaptable Codebase**: Demonstrates best practices in web development, with a focus on adaptability, scalability, and maintainability.
 
 > [!IMPORTANT]
-
-## Intellectual Property
-
-This app is my intellectual property, **_Mihaiu Sorin-Ionut_** and serves as a demonstration of my professional skills, adaptability, and commitment to delivering high-quality software solutions. It showcases modern web development practices, emphasizing type safety, user experience, and robust architecture.
+>
+> ## Intellectual Property
+>
+> This app is my intellectual property, **_Mihaiu Sorin-Ionut_**, and serves as a demonstration of my professional skills, adaptability, and commitment to delivering high-quality software solutions. It showcases modern web development practices, emphasizing type safety, user experience, and robust architecture.

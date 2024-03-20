@@ -1,6 +1,28 @@
 {
 	"name": "user-hub",
 	"version": "0.1.0",
+	"author": "Mihaiu Sorin-Ionut",
+	"description": "A dynamic, type-safe web app for managing user records, built with Next.js 14, React, TypeScript, and Prisma, showcasing modern web development practices.",
+	"license": "MIT",
+	"keywords": [
+		"web-application",
+		"user-management",
+		"nextjs14",
+		"react",
+		"typescript",
+		"recoil",
+		"prisma",
+		"ssg",
+		"static-site-generation",
+		"ssr",
+		"server-side-rendering",
+		"app-router-nextjs",
+		"crud",
+		"form-handling",
+		"form-validation",
+		"react-hook-form",
+		"zod-validation"
+	],
 	"private": true,
 	"scripts": {
 		"predev": "ts-node --project tsconfig.scripts.json api/populate-db-prisma.ts",

@@ -124,9 +124,7 @@ export const updateUserQuery = async (
 	})
 
 	if (existingUser) {
-		if (existingUser) {
-			throw new Error('User name already exists')
-		}
+		throw new Error('User name already exists')
 	}
 
 	try {

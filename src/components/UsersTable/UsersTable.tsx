@@ -1,12 +1,12 @@
 'use client'
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { Suspense, useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button, Modal, Spin, Table, Tag, Tooltip } from 'antd'
 import type { TableProps } from 'antd'
 import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
 import dayjs from 'dayjs'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { queryParamsAtom, usersAtom } from '@/recoil'
 import { useRecoilAlert, useRecoilUser } from '@/hooks'
 // UserModal is only needed when a user decides to add or edit a user, so it is dynamically imported using React.lazy
@@ -36,8 +36,7 @@ const UsersTable = ({ tableData }: UsersTableProps) => {
 	const [usersState, setUsersState] = useRecoilState(usersAtom)
 	const { data: userData, count: userCount } = usersState || {}
 
-	const [queryParamsState, setQueryParamsState] =
-		useRecoilState(queryParamsAtom)
+	const queryParamsState = useRecoilValue(queryParamsAtom)
 	const { queryParams, sortParams, filterParams } = queryParamsState
 	const { page, page_size } = queryParams
 	const { order, order_by } = sortParams
@@ -290,11 +289,13 @@ const UsersTable = ({ tableData }: UsersTableProps) => {
 
 	return (
 		<>
-			<UserModal
-				open={modalOpen}
-				setOpen={setModalOpen}
-				userId={userId}
-			/>
+			<Suspense fallback={<Spin size="large" />}>
+				<UserModal
+					open={modalOpen}
+					setOpen={setModalOpen}
+					userId={userId}
+				/>
+			</Suspense>
 
 			{userData ? (
 				<>

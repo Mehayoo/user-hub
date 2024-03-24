@@ -6,13 +6,12 @@ import {
 	UserWithCountry,
 } from '@/db/queries/users'
 import { zodUserSchema } from '@/db/schema/user.schema'
-import { mergeWithDefaultParams } from '@/utils'
 import {
 	ApiResponse,
+	filterFieldsMap,
 	Filters,
 	SortOrder,
 	SortParams,
-	filterFieldsMap,
 } from '@/constants'
 
 export async function GET(req: NextRequest) {
@@ -32,16 +31,12 @@ export async function GET(req: NextRequest) {
 		? (orderByValue as SortParams)
 		: SortParams.CreatedAt
 
-	const paramsObj = mergeWithDefaultParams({
-		sortParams: {
-			order: order,
-			order_by: orderBy,
-		},
-		queryParams: {
-			page: Number(searchParams.get('page')),
-			page_size: Number(searchParams.get('page_size')),
-		},
-	})
+	const paramsObj = {
+		order,
+		order_by: orderBy,
+		page: Number(searchParams.get('page')),
+		page_size: Number(searchParams.get('page_size')),
+	}
 
 	const filterParams: Filters = filterFieldsMap.reduce((acc, field) => {
 		const value = searchParams.get(field)
@@ -53,7 +48,7 @@ export async function GET(req: NextRequest) {
 	try {
 		const users: ApiResponse<UserWithCountry[]> = await getAllUsersQuery({
 			...paramsObj,
-			filterParams,
+			filters: filterParams,
 		})
 
 		return Response.json(users)

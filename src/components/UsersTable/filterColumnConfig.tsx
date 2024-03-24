@@ -28,7 +28,7 @@ export const createFilterColumnConfig = ({
 	filterIcon: (filtered: boolean) => (
 		<SearchOutlined
 			style={{
-				color: queryParamsState.filterParams[dataIndex]
+				color: queryParamsState.filters.params[dataIndex]
 					? '#1677ff'
 					: undefined,
 			}}

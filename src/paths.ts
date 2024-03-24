@@ -1,24 +1,11 @@
+import { constructQueryString } from './utils/constructQueryString'
 import { SessionStorage } from './constants'
 
 const paths = {
-	home(params?: SessionStorage): string {
-		const allParams = [
-			...Object.entries(params?.queryParams || {}),
-			...Object.entries(params?.filterParams || {}),
-			...Object.entries(params?.sortParams || {}),
-		]
+	home(arg?: SessionStorage): string {
+		const queryString: string = constructQueryString(arg)
 
-		const queryString: string = allParams
-			.map(
-				([key, value]) =>
-					`${encodeURIComponent(key)}=${encodeURIComponent(value)}`
-			)
-			.join('&')
-
-		if (queryString.length) {
-			return `/?${queryString}`
-		}
-		return '/'
+		return queryString ? `/?${queryString}` : '/'
 	},
 	userShow(id: string): string {
 		return `/users/${id}`
@@ -39,27 +26,9 @@ const paths = {
 		if (id) {
 			return `/api/users/${id}`
 		} else {
-			let queryString: string = ''
-			if (params) {
-				const allParams = [
-					...Object.entries(params.queryParams || {}),
-					...Object.entries(params.sortParams || {}),
-					...Object.entries(params.filterParams || {}),
-				]
+			const queryString: string = constructQueryString(params)
 
-				queryString = allParams
-					.map(
-						([key, value]) =>
-							`${encodeURIComponent(key)}=${encodeURIComponent(
-								value
-							)}`
-					)
-					.join('&')
-			}
-
-			queryString = queryString.length ? `?${queryString}` : ''
-
-			return `/api/users${queryString}`
+			return `/api/users${queryString && `?${queryString}`}`
 		}
 	},
 }

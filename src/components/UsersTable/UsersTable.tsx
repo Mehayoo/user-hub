@@ -3,7 +3,7 @@
 import React, { Suspense, useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button, Modal, Spin, Table, Tag, Tooltip } from 'antd'
-import type { TableProps } from 'antd'
+import type { TablePaginationConfig, TableProps } from 'antd'
 import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
 import dayjs from 'dayjs'
 import { useRecoilState, useRecoilValue } from 'recoil'
@@ -12,16 +12,13 @@ import { useRecoilAlert, useRecoilUser } from '@/hooks'
 // UserModal is only needed when a user decides to add or edit a user, so it is dynamically imported using React.lazy
 const UserModal = React.lazy(() => import('@/components/UserModal/UserModal'))
 import paths from '@/paths'
-import {
-	mapAntdToPrismaSort,
-	mergeWithDefaultParams,
-	triggerRevalidation,
-} from '@/utils'
+import { mapAntdToPrismaSort, triggerRevalidation } from '@/utils'
 import { createSortColumnConfig } from './sortColumnConfig'
 import { createFilterColumnConfig } from './filterColumnConfig'
 import { UserWithCountry } from '@/db/queries/users'
 import {
 	FilterParams,
+	SessionStorage,
 	SortOrder,
 	SortParams,
 	defaultQueryParamsMap,
@@ -37,9 +34,7 @@ const UsersTable = ({ tableData }: UsersTableProps) => {
 	const { data: userData, count: userCount } = usersState || {}
 
 	const queryParamsState = useRecoilValue(queryParamsAtom)
-	const { queryParams, sortParams, filterParams } = queryParamsState
-	const { page, page_size } = queryParams
-	const { order, order_by } = sortParams
+	const { page, page_size, order, order_by, filters } = queryParamsState
 
 	const alertActions = useRecoilAlert()
 
@@ -53,11 +48,11 @@ const UsersTable = ({ tableData }: UsersTableProps) => {
 
 	useEffect(() => {
 		if (
-			order !== defaultQueryParamsMap.sortParams.order ||
-			order_by !== defaultQueryParamsMap.sortParams.order_by ||
-			page !== defaultQueryParamsMap.queryParams.page ||
-			page_size !== defaultQueryParamsMap.queryParams.page_size ||
-			Object.keys(filterParams).length
+			order !== defaultQueryParamsMap.order ||
+			order_by !== defaultQueryParamsMap.order_by ||
+			page !== defaultQueryParamsMap.page ||
+			page_size !== defaultQueryParamsMap.page_size ||
+			Object.keys(filters.params).length
 		) {
 			userActions.getAllUsers(queryParamsState)
 		} else {
@@ -95,39 +90,43 @@ const UsersTable = ({ tableData }: UsersTableProps) => {
 	}
 
 	const handleTableChange: TableProps<UserWithCountry>['onChange'] = async (
-		pagination,
+		pagination: TablePaginationConfig,
 		_,
 		sorter: any // For some reason, there is no Typescript support for this
 	) => {
 		const { current } = pagination
 		const { columnKey, order } = sorter
 
-		const mappedOrder: SortOrder = mapAntdToPrismaSort(order)
-		const paramsObj = mergeWithDefaultParams({
+		const { filters } = queryParamsState
+
+		const mappedOrder: SortOrder =
+			mapAntdToPrismaSort(order) ?? queryParamsState.order
+
+		const paramsObj: SessionStorage = {
 			...queryParamsState,
-			queryParams: {
-				...defaultQueryParamsMap.queryParams,
+			...(!Object.keys(filters.params).length && {
 				page: current ?? page,
+			}),
+			order: mappedOrder,
+			order_by: columnKey ?? order_by,
+			filters: {
+				...queryParamsState.filters,
+				...(Object.keys(filters.params).length && {
+					page: current,
+				}),
 			},
-			sortParams: {
-				order: mappedOrder,
-				order_by: columnKey ?? order_by,
-			},
-		})
+		}
 
 		await userActions.getAllUsers(paramsObj)
 	}
 
 	const onResetFilteringAndSorting = async (): Promise<void> => {
-		const paramsObj = {
+		const paramsObj: SessionStorage = {
 			...defaultQueryParamsMap,
-			queryParams: {
-				...defaultQueryParamsMap.queryParams,
-				page: page,
-			},
+			page: page,
 		}
 
-		setTableKey((tableKey) => tableKey + 1)
+		setTableKey((tableKey: number) => tableKey + 1)
 
 		await userActions.getAllUsers(paramsObj)
 	}
@@ -139,9 +138,11 @@ const UsersTable = ({ tableData }: UsersTableProps) => {
 				render: (_, __, index) =>
 					index +
 					1 +
-					((page ?? defaultQueryParamsMap.queryParams.page) - 1) *
-						(page_size ??
-							defaultQueryParamsMap.queryParams.page_size),
+					((Object.keys(filters.params).length
+						? filters.page
+						: page ?? defaultQueryParamsMap.page) -
+						1) *
+						(page_size ?? defaultQueryParamsMap.page_size),
 
 				title: 'Index',
 			},
@@ -312,7 +313,9 @@ const UsersTable = ({ tableData }: UsersTableProps) => {
 						key={tableKey}
 						onChange={handleTableChange}
 						pagination={{
-							current: page,
+							current: Object.keys(filters.params).length
+								? filters.page
+								: page,
 							pageSize: page_size,
 							total: userCount,
 						}}

@@ -21,15 +21,15 @@ export const createSortColumnConfig = ({
 
 	showSorterTooltip: {
 		title:
-			queryParamsState.sortParams.order === SortOrder.Asc &&
-			queryParamsState.sortParams.order_by === sortParam
+			queryParamsState.order === SortOrder.Asc &&
+			queryParamsState.order_by === sortParam
 				? 'Click to sort descending'
 				: 'Click to sort ascending',
 	},
 
 	sortDirections:
-		queryParamsState.sortParams.order === SortOrder.Asc &&
-		queryParamsState.sortParams.order_by === sortParam
+		queryParamsState.order === SortOrder.Asc &&
+		queryParamsState.order_by === sortParam
 			? [
 					AntdSortOrder.Descend,
 					AntdSortOrder.Ascend,
@@ -55,9 +55,8 @@ export const createSortColumnConfig = ({
 				<CaretUpOutlined
 					style={{
 						color:
-							queryParamsState.sortParams.order ===
-								SortOrder.Asc &&
-							queryParamsState.sortParams.order_by === sortParam
+							queryParamsState.order === SortOrder.Asc &&
+							queryParamsState.order_by === sortParam
 								? '#1677ff'
 								: 'rgba(0, 0, 0, 0.29)',
 						fontSize: 12,
@@ -70,9 +69,8 @@ export const createSortColumnConfig = ({
 				<CaretDownOutlined
 					style={{
 						color:
-							queryParamsState.sortParams.order ===
-								SortOrder.Desc &&
-							queryParamsState.sortParams.order_by === sortParam
+							queryParamsState.order === SortOrder.Desc &&
+							queryParamsState.order_by === sortParam
 								? '#1677ff'
 								: 'rgba(0, 0, 0, 0.29)',
 						fontSize: 12,

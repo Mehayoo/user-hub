@@ -4,7 +4,7 @@ import {
 	ApiResponse,
 	defaultQueryParamsMap,
 	FilterParams,
-	SessionStorage,
+	QueryParams,
 	SortParams,
 } from '@/constants'
 
@@ -13,17 +13,15 @@ export type UserWithCountry = User & {
 }
 
 export const getAllUsersQuery = async (
-	params: SessionStorage
+	params: QueryParams
 ): Promise<ApiResponse<UserWithCountry[]>> => {
-	const { filterParams, queryParams, sortParams } = params
-	const { page, page_size } = queryParams
-	const { order, order_by } = sortParams
+	const { page, page_size, order, order_by, filters } = params
+
+	const skip: number =
+		((page ?? defaultQueryParamsMap.page) - 1) *
+		(page_size ?? defaultQueryParamsMap.page_size)
 
 	let orderBy: Prisma.UserOrderByWithRelationInput = {}
-	const skip: number =
-		((page ?? defaultQueryParamsMap.queryParams.page) - 1) *
-		(page_size ?? defaultQueryParamsMap.queryParams.page_size)
-
 	if (order_by === SortParams.Country) {
 		orderBy = {
 			country: {
@@ -32,14 +30,14 @@ export const getAllUsersQuery = async (
 		}
 	} else {
 		orderBy = {
-			[order_by ?? defaultQueryParamsMap.sortParams.order_by]:
-				order ?? defaultQueryParamsMap.sortParams.order,
+			[order_by ?? defaultQueryParamsMap.order_by]:
+				order ?? defaultQueryParamsMap.order,
 		}
 	}
 
 	let filterObj: Record<string, any> = {}
-	if (Object.keys(filterParams).length) {
-		Object.entries(filterParams).forEach(([key, value]) => {
+	if (filters && Object.keys(filters).length) {
+		Object.entries(filters).forEach(([key, value]) => {
 			if (key === FilterParams.Country) {
 				filterObj.country = { is: { name: { contains: value } } }
 			} else {
@@ -58,8 +56,8 @@ export const getAllUsersQuery = async (
 				country: true,
 			},
 			orderBy,
-			skip: skip,
-			take: page_size ?? defaultQueryParamsMap.queryParams.page_size,
+			skip,
+			take: page_size ?? defaultQueryParamsMap.page_size,
 			...(Object.keys(filterObj).length && { where: filterObj }),
 		})
 

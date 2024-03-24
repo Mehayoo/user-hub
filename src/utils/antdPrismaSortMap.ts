@@ -6,7 +6,5 @@ export const mapAntdToPrismaSort = (order: 'ascend' | 'descend'): SortOrder => {
 			return SortOrder.Asc
 		case 'descend':
 			return SortOrder.Desc
-		default:
-			return SortOrder.Desc
 	}
 }

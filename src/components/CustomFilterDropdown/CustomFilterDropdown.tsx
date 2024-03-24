@@ -5,7 +5,7 @@ import { useRecoilValue } from 'recoil'
 import { queryParamsAtom } from '@/recoil'
 import { useRecoilUser } from '@/hooks'
 import { omit } from 'lodash'
-import { SessionStorage } from '@/constants'
+import { Filters, SessionStorage } from '@/constants'
 import { CustomFilterDropdownProps } from './types'
 
 const CustomFilterDropdown = ({
@@ -20,7 +20,7 @@ const CustomFilterDropdown = ({
 	const queryParamsState: SessionStorage = useRecoilValue(queryParamsAtom)
 
 	const [inputValue, setInputValue] = useState<string>(
-		queryParamsState.filterParams[dataIndex] || ''
+		queryParamsState.filters.params[dataIndex] || ''
 	)
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -33,11 +33,17 @@ const CustomFilterDropdown = ({
 		setInputValue('')
 		clearFilters()
 
-		const newFilterParams = omit(queryParamsState.filterParams, dataIndex)
+		const newFilterParams: Pick<Filters, keyof Filters> = omit(
+			queryParamsState.filters.params,
+			dataIndex
+		)
 
-		const newQueryParamsState = {
+		const newQueryParamsState: SessionStorage = {
 			...queryParamsState,
-			filterParams: newFilterParams,
+			filters: {
+				params: newFilterParams,
+				page: Object.keys(newFilterParams).length ? 1 : 0,
+			},
 		}
 
 		userActions.getAllUsers(newQueryParamsState)
@@ -46,15 +52,14 @@ const CustomFilterDropdown = ({
 	}
 
 	const handleSearch = () => {
-		const paramsObj = {
+		const paramsObj: SessionStorage = {
 			...queryParamsState,
-			queryParams: {
-				...queryParamsState.queryParams,
+			filters: {
+				params: {
+					...queryParamsState.filters.params,
+					[dataIndex]: selectedKeys.toString().toLowerCase(),
+				},
 				page: 1,
-			},
-			filterParams: {
-				...queryParamsState.filterParams,
-				[dataIndex]: selectedKeys.toString().toLowerCase(),
 			},
 		}
 		userActions.getAllUsers(paramsObj)

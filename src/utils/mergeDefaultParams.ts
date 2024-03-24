@@ -1,24 +1,17 @@
 import { defaultQueryParamsMap, SessionStorage } from '@/constants'
 
 export const mergeWithDefaultParams = (
-	params: Partial<SessionStorage>
+	arg: Partial<SessionStorage>
 ): SessionStorage => ({
-	queryParams: {
-		page:
-			params?.queryParams?.page ?? defaultQueryParamsMap.queryParams.page,
-		page_size:
-			params?.queryParams?.page_size ??
-			defaultQueryParamsMap.queryParams.page_size,
-	},
-	filterParams:
-		params?.filterParams && Object.keys(params.filterParams).length
-			? params.filterParams
-			: {},
-	sortParams: {
-		order:
-			params?.sortParams?.order ?? defaultQueryParamsMap.sortParams.order,
-		order_by:
-			params?.sortParams?.order_by ??
-			defaultQueryParamsMap.sortParams.order_by,
+	page: arg?.page ?? defaultQueryParamsMap.page,
+	page_size: arg?.page_size ?? defaultQueryParamsMap.page_size,
+	order: arg?.order ?? defaultQueryParamsMap.order,
+	order_by: arg?.order_by ?? defaultQueryParamsMap.order_by,
+	filters: {
+		params:
+			arg.filters?.params && Object.keys(arg.filters.params).length
+				? arg.filters.params
+				: {},
+		page: arg.filters?.page ?? defaultQueryParamsMap.filters.page,
 	},
 })

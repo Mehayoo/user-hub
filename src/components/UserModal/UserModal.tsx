@@ -138,15 +138,18 @@ const UserModal = ({ open, setOpen, userId }: UserModalProps) => {
 			clearErrors()
 			reset()
 		}
+
 		setTimeout(() => setOpen(false), 50)
 	}
 
 	const addUser = async (data: FormAddUser): Promise<void> => {
 		try {
 			await userActions.addUser(data)
+
 			alertActions.success('User added')
 		} catch (error: unknown) {
 			alertActions.error('Failed to add user')
+
 			throw error
 		}
 	}
@@ -157,9 +160,11 @@ const UserModal = ({ open, setOpen, userId }: UserModalProps) => {
 	): Promise<void> => {
 		try {
 			await userActions.updateUser(id, data)
+
 			alertActions.success('User updated')
 		} catch (error: unknown) {
 			alertActions.error('Failed to update user')
+
 			throw error
 		}
 	}
@@ -318,8 +323,14 @@ const UserModal = ({ open, setOpen, userId }: UserModalProps) => {
 							<Controller
 								name="newsletter_register"
 								control={control}
-								render={({ field: { onChange, ref } }) => (
-									<Checkbox onChange={onChange} ref={ref} />
+								render={({
+									field: { onChange, ref, value },
+								}) => (
+									<Checkbox
+										checked={value}
+										onChange={onChange}
+										ref={ref}
+									/>
 								)}
 							/>
 						</Form.Item>

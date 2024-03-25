@@ -27,6 +27,7 @@
 	"scripts": {
 		"predev": "ts-node --project tsconfig.scripts.json api/populate-db-prisma.ts",
 		"dev": "next dev",
+		"prebuild": "ts-node --project tsconfig.scripts.json api/populate-db-prisma.ts",
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint"

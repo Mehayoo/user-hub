@@ -73,7 +73,9 @@ export const useRecoilUser = () => {
 		body: FormEditUser
 	): Promise<void> => {
 		try {
-			await fetchWrapper().patch(paths.apiUsers({ id }), body)
+			await fetchWrapper()
+				.patch(paths.apiUsers({ id }), body)
+				.then(setUser)
 		} catch (error: unknown) {
 			console.error(`Failed to update user with ${id}: `, error)
 

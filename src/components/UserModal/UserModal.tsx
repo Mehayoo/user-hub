@@ -75,13 +75,12 @@ const UserModal = ({ open, setOpen, userId }: UserModalProps) => {
 		if (mode.edit && userData) {
 			const { birthday, country, ...restOfUserData } = userData
 
-			const sanitizedData = Object.entries(restOfUserData).reduce(
-				(acc: any, [key, value]) => {
-					acc[key] = value === null ? undefined : value
-					return acc
-				},
-				{} as OptionalNullable<User>
-			)
+			const sanitizedData: OptionalNullable<User> = Object.entries(
+				restOfUserData
+			).reduce((acc: any, [key, value]) => {
+				acc[key] = value === null ? undefined : value
+				return acc
+			}, {} as OptionalNullable<User>)
 
 			reset(sanitizedData)
 
